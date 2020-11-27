@@ -10,4 +10,4 @@ db = client.get_database("my_api")
 
 def insert_user(collection, user):
     curs = db[collection].insert_one(user)
-    return {"_id": curs.inserted_id}
+    return {"_id": curs.inserted_id}   

@@ -1,16 +1,42 @@
-from api.app import app
+from app import app
 from flask import request, send_from_directory
 from helpers.mongoConnection import *
 from bson import json_util
 import os
 from random import choice
-app = Flask(__name__)
 
 
 @app.route("/")
 def hello_world():
     return {"hello": "World!"}
+
+
+
+
+
+
 '''
+
+MANDAR INFO A LA API:
+
+1)
+
+@app.route("/hello")
+def salute():
+    name = request.args.get("name")
+    lastname = request.args.get("lastname")
+    return f"Hello, {name} {lastname}"
+
+2)
+@app.route("/hello/<name>")
+def salute(name):
+    name = request.args.get("name")
+    return f"Hello, {name}"
+
+
+
+
+
 @app.route("/help")
 def help():
     return {"welcome":"Welcome to my API"}
@@ -21,6 +47,8 @@ def salute():
     name = request.args.get("name")
     return f"Hello, {name}!!!"
 
+
+##Llamada a get_company de mongo
 @app.route("/company")
 def comp():
     name = request.args.get("name")
