@@ -6,13 +6,24 @@
 </head>
 <body>
     <h1>Welcome to the sentiment analysis chat API!</h1>
-    <h2>To create a new user go to :</h2>
-    <h3>    http://localhost:5000/</h3>
-    <h2>To create a chat room go to :</h2>
-    <h3>    http://localhost:5000/</h3>
-    <h2>To create a new user go to :</h2>
-    <h3>    http://localhost:5000/</h3>
-    <h2>To create a chat room go to :</h2>
-    <h3>    http://localhost:5000/</h3>
+    <h2>These are some urls you can use: :</h2>
+    
+    <h3>See all users:</h3>
+    <h4>--> http://localhost:5000/users</h4>
+    
+    <h3>Create an user and save it to the database:</h3>
+    <h4>--> http://localhost:5000/chat/create?participants=Name1,Namen&chat_name=chat</h4>
+    
+    <h3>Add user to existing chat:</h3>
+    <h4>--> http://localhost:5000/chat/adduser?new_participant=Name&chat_name=chat<username></h4>
+    
+    <h3>User adds message to chat room:</h3>
+    <h4>--> http://localhost:5000/chat/addmessage?message=text&to=chat&from=Name<username></h4>
+    
+    <h3>Get messages from chat:</h3>
+    <h4>--> http://localhost:5000//chat/list?chat_name=Anexo<username></h4>
+    
+    <h3>Analyze sentiments from chat:</h3>
+    <h4>--> http://localhost:5000//chat/sentiment?chat_name=Anexo/<username></h4>
 </body>
 </html>

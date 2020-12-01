@@ -4,8 +4,8 @@ from helpers.mongoConnection import *
 from bson import json_util #Converts bson to a readable format
 import datetime
 from bson.objectid import ObjectId
-
-
+from api.sentiments import *
+from statistics import mean 
 
 
 
@@ -121,29 +121,50 @@ def add_message():
     
     chat_id = list(db.chats.find({"chat_name": chat},{"_id":1}))[0]["_id"]
     user_id = list(db.users.find({"username": user},{"_id":1}))[0]["_id"]
-    return 0
-'''    # Same as previous routes
-    #if user not in list(list(db.chats.find({"chat_name": chat},{"participants":1}))[0]["participants"].keys()):
-    if user in db.chats.distinct("participants"):
+    
+    # Same as previous routes
+    if user not in list(list(db.chats.find({"chat_name": chat},{"participants":1}))[0]["participants"].keys()):
         #raise ValueError ("User not in chat.")
         return {"Error":"User not in chat."}
     else:
-        new = db.chats.insert({"message":text, "from": user_id, "to":chat_id})
-        return json_util.dumps(f"Message added: {new}")'''
+        new = db.messages.insert({"message":text, "from": user_id, "to":chat_id})
+        return json_util.dumps(f"Message added: {new}")
 
 
 
-'''
-
-(GET) /chat/list
-Purpose: Get all messages from chat_id
-Returns: json array with all messages from this chat_id
 
 
-'''
+#(GET) GET ALL MESSAGES FROM A CHAT
+# - Returns: json array with all messages from this chat_id
+@app.route("/chat/list")
+def return_messages():
+    chat = request.args.get("chat_name") 
+    chat_id = list(db.chats.find({"chat_name": chat},{"_id":1}))[0]["_id"]
+   
+    res = list(db.messages.find({"to": chat_id }, {"message":1}))
+    mensa = [res[i]["message"] for i in range(len(res))]
+    return json_util.dumps(mensa)
 
 
+#(GET) ANALYZE MESSAGES FROM A CHAT_ID
+# - Returns: sentiments
+@app.route("/chat/sentiment")
+def sentiments():
+    chat = request.args.get("chat_name") 
+    chat_id = list(db.chats.find({"chat_name": chat},{"_id":1}))[0]["_id"]
+   
+    res = list(db.messages.find({"to": chat_id }, {"message":1}))
+    mensa = [res[i]["message"] for i in range(len(res))]
 
+    neg = []
+    neu = []
+    pos = []
+    for m in mensa:
+        res = sia.polarity_scores(m)
+        neg.append(res['neg'])
+        neu.append(res['neu'])
+        pos.append(res['pos'])
+    return json_util.dumps({'negative': mean(neg), 'neutral': mean(neu), 'positive': mean(pos)})
 
 if __name__ == '__main__':
     app.run(debug=True)
